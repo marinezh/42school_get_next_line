@@ -6,20 +6,11 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 13:59:30 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/13 01:44:26 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:44:04 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
-#include <fcntl.h>
-
-
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 42 // Default buffer size if not defined
-#endif
+#include "get_next_line.h"
 
 // Helper function to find the newline character
 static char *find_newline(const char *str)
