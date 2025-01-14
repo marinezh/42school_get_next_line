@@ -1,19 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 11:25:16 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/14 14:55:53 by mzhivoto         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 
 #define BUFFER_SIZE 32  // Define a buffer size (adjust as needed)
 
@@ -95,6 +84,3 @@ int main()
 	close(fd);
 	return 0;
 }
-
-
-

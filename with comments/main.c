@@ -1,40 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 13:59:30 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/14 13:14:32 by mzhivoto         ###   ########.fr       */
+/*   Created: 2025/01/13 01:16:52 by mzhivoto          #+#    #+#             */
+/*   Updated: 2025/01/14 15:07:50 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
-{
-    static char *buffer = NULL;
-    char *line;
+// int main()
+// {
+// 	int fd = open("text.txt", O_RDONLY);
+// 	char *line;
 
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return NULL;
-
-    buffer = read_to_buffer(fd, buffer);
-    if (!buffer)
-        return NULL;
-
-    if (*buffer)
-        line = extract_line(&buffer);
-    else
-    {
-        free(buffer);
-        buffer = NULL;
-        return NULL;
-    }
-
-    return line;
-}
+// 	if (fd < 0)
+// 	{
+// 		printf("Error");
+// 		return(1);
+// 	}
+// 	line = get_next_line(fd);
+// 	while (line != NULL)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }
+#include <fcntl.h>
+#include <stdio.h>
 
 int main()
 {
@@ -43,7 +46,7 @@ int main()
 
     if (fd < 0)
     {
-        perror("Error opening file");
+        printf("Error opening file");
         return 1;
     }
 

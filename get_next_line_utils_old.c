@@ -6,41 +6,51 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:25:16 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/13 18:16:17 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:42:09 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "get_next_line.h"
 
-// char	*str_join(char *s1, const char *s2)
-// {
-// 	size_t	str1_len;
-// 	size_t	str2_len;
-// 	size_t	i;
-// 	char	*result;
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char	*d;
+	unsigned char	*s;
+	size_t			i;
 
-// 	if (!s1 || !s2)
-// 		return (NULL);
-// 	str1_len = 0;
-// 	str2_len = 0;
-// 	if(s1)
-//     	while (s1[str1_len])
-//         	str1_len++;
-//     while (s2[str2_len])
-//         str2_len++;
-// 	result = (char *)malloc((str1_len + str2_len + 1) * sizeof(char));
-// 	if (!result)
-// 		return (NULL);
-// 	i = 0;
-// 	while(*s1)
-// 		result[i++] = *s1++;
-// 	while (*s2)
-// 		result[i++] = *s2++;
-// 	result[i] = '\0';
-// 	free(s1);
-// 	return (result);
-// }
+	if (!dest && !src)
+		return (NULL);
+	i = 0;
+	d = (unsigned char *)dest;
+	s = (unsigned char *)src;
+	while (i < n)
+	{
+		d[i] = s[i];
+		i++;
+	}
+	return (dest);
+}
+char *str_join(char *s1, const char *s2)
+{
+	size_t s1_len = 0;
+	size_t s2_len = 0;
+	char *result;
+
+	while (s1 && s1[s1_len])  // Calculate length of s1
+		s1_len++;
+	while (s2[s2_len])  // Calculate length of s2
+		s2_len++;
+	result = malloc(s1_len + s2_len + 1);
+	if (!result)
+		return NULL;
+	if (s1) 
+		ft_memcpy(result, s1, s1_len);
+	ft_memcpy(result + s1_len, s2, s2_len + 1);
+
+	free(s1);  // Free s1 if it exists
+	return result;
+}
 char	*str_join(char *s1, const char *s2)
 {
 	size_t	s1_len;
@@ -69,99 +79,104 @@ char	*str_join(char *s1, const char *s2)
 	return (result);
 }
 
-
-// char *str_join(char *s1, const char *s2)
-// {
-//     size_t len1 = s1 ? strlen(s1) : 0;
-//     size_t len2 = s2 ? strlen(s2) : 0;
-//     char *result = malloc(len1 + len2 + 1);
-//     if (!result)
-//         return NULL;
-//     if (s1)
-//         strcpy(result, s1);
-//     if (s2)
-//         strcpy(result + len1, s2);
-//     free(s1);
-//     return result;
-// }
-// char *ft_strndup(const char *s, size_t n)
-// {
-//     size_t len = 0;
-//     char *dup;
-
-//     while (s[len] && len < n) // Calculate the length to copy
-//         len++;
-
-//     dup = (char *)malloc(len + 1); // Allocate memory for the substring
-//     if (!dup)
-//         return NULL;
-
-//     memcpy(dup, s, len); // Copy the substring into the allocated memory
-//     dup[len] = '\0';     // Null-terminate the new string
-
-//     return dup;
-// }
-
 char *find_newline(const char *str)
 {
-    if (!str)
-        return NULL;
-    return strchr(str, '\n');
+	if (!str)
+		return NULL;
+	while (*str)
+	{
+		if (*str == '\n')
+			return (char *)str;
+		str++;
+	}
+	  return NULL;
 }
 
-// Helper function to join two strings
+// char *extract_line(char **buffer)
+// {
+//     char *newline_pos;
+//     char *line;
+//     char *remaining;
 
-
-// Helper function to extract a line from the buffer
+//     if (!buffer || !*buffer)  // Check if the buffer is NULL or empty
+//         return NULL;
+//     newline_pos = find_newline(*buffer);  // Find the newline character
+//     if (newline_pos)
+//     {
+//         line = malloc(newline_pos - *buffer + 2);  // +1 for the newline, +1 for '\0'
+//         if (!line)
+//             return NULL;
+//         ft_memcpy(line, *buffer, newline_pos - *buffer + 1);  // Copy line + newline
+//         line[newline_pos - *buffer + 1] = '\0';  // Null-terminate
+//         remaining = str_join(NULL, newline_pos + 1);
+//         if (!remaining)
+//         {
+//             free(line);
+//             return NULL;
+//         }
+//         free(*buffer);  // Free the original buffer
+//         *buffer = remaining;  // Update the buffer with the remaining part
+//     }
+//     else
+//     {
+//         line = *buffer;  // No newline, take the entire buffer
+//         *buffer = NULL;  // Set buffer to NULL
+//     }
+//     return line;
+// }
 char *extract_line(char **buffer)
 {
-    char *newline_pos = find_newline(*buffer);
-    char *line;
-    char *remaining;
+	char *newline_pos;
+	char *line;
+	char *remaining;
 
-    if (!buffer || !*buffer)
-        return NULL;
-
-    if (newline_pos)
-    {
-        line = str_join(NULL, *buffer);  // Use str_join to duplicate the line up to the newline
-        if (!line) return NULL;
-
-        remaining = str_join(NULL, newline_pos + 1);  // Use str_join to duplicate the remainder
-        if (!remaining) { free(line); return NULL; }
-
-        free(*buffer);
-        *buffer = remaining;
-    }
-    else
-    {
-        line = *buffer;
-        *buffer = NULL;
-    }
-
-    return line;
+	if (!buffer || !*buffer)  
+		return NULL;
+	newline_pos = find_newline(*buffer);
+	if (newline_pos)
+	{
+		line = malloc(newline_pos - *buffer + 2);
+		if (!line)
+			return NULL;
+		ft_memcpy(line, *buffer, newline_pos - *buffer + 1);
+		line[newline_pos - *buffer + 1] = '\0';
+		remaining = str_join(NULL, newline_pos + 1);
+		free(*buffer);
+		*buffer = remaining;
+	}
+	else
+	{
+		line = str_join(NULL, *buffer);
+		free(*buffer);
+		*buffer = NULL;
+	}
+	return line;
 }
+
 
 char *read_to_buffer(int fd, char *buffer)
 {
-    char temp_buffer[BUFFER_SIZE + 1];
-    ssize_t bytes_read;
+	char temp_buffer[BUFFER_SIZE + 1];
+	ssize_t bytes_read;
 
-    while (!find_newline(buffer))
-    {
-        bytes_read = read(fd, temp_buffer, BUFFER_SIZE);
-        if (bytes_read < 0)
-        {
-            free(buffer);
-            return NULL;
-        }
-        if (bytes_read == 0)
-            break;
-        temp_buffer[bytes_read] = '\0';
-        buffer = str_join(buffer, temp_buffer);
-        if (!buffer)
-            return NULL;
-    }
-
-    return buffer;
+	while (!find_newline(buffer))
+	{
+		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+		{
+			free(buffer);
+			return NULL;
+		}
+		if (bytes_read == 0)
+			break;
+		temp_buffer[bytes_read] = '\0';
+		char *new_buffer = str_join(buffer, temp_buffer);
+		if (!new_buffer)
+		{
+			free(buffer);
+			return NULL;
+		}
+		buffer = new_buffer;
+	}
+	return buffer;
 }
