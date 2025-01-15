@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:25:16 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/14 18:54:00 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/15 22:03:39 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,81 +123,108 @@ char	*extract_line(char **buffer)
 	return (line);
 }
 
-char *read_to_buffer(int fd, char *buffer)
+// char *read_to_buffer(int fd, char *buffer)
+// {
+// 	char temp_buffer[BUFFER_SIZE + 1];  // Temporary buffer for reading from the file
+// 	ssize_t bytes_read;
+
+// 	// Keep reading until a newline is found in the buffer
+// 	while (!find_newline(buffer))
+// 	{
+// 		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);  // Read up to BUFFER_SIZE bytes
+// 		if (bytes_read < 0)  // If read failed
+// 		{
+// 			free(buffer);  // Free the buffer
+// 			return NULL;  // Return NULL on error
+// 		}
+// 		if (bytes_read == 0)  // If end of file is reached
+// 			break;
+
+// 		// Null-terminate the temporary buffer
+// 		temp_buffer[bytes_read] = '\0';  
+// 		printf("read_to_buffer: read %zd bytes='%s'\n", bytes_read, temp_buffer);
+
+// 		// Concatenate the temporary buffer to the existing buffer
+// 		buffer = str_join(buffer, temp_buffer);
+// 		if (!buffer)
+// 			return NULL;// Free buffer if memory allocation fails
+		
+// 		// Debug: Show the updated buffer
+// 		printf("read_to_buffer: buffer='%s'\n", buffer);
+// 	}
+// 	return buffer;  // Return the updated buffer
+// }
+char	*read_to_buffer(int fd, char *buffer)
 {
-	char temp_buffer[BUFFER_SIZE + 1];  // Temporary buffer for reading from the file
-	ssize_t bytes_read;
+	char	*temp_buffer;
+	ssize_t	bytes_read;
 
-	// Keep reading until a newline is found in the buffer
-	while (!find_newline(buffer))
+	temp_buffer = malloc(BUFFER_SIZE + 1);
+	if (!temp_buffer)
+		return (free(buffer), NULL);
+	bytes_read = 1;
+	while (!find_newline(buffer) && bytes_read > 0)
 	{
-		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);  // Read up to BUFFER_SIZE bytes
-		if (bytes_read < 0)  // If read failed
-		{
-			free(buffer);  // Free the buffer
-			return NULL;  // Return NULL on error
-		}
-		if (bytes_read == 0)  // If end of file is reached
-			break;
-
-		// Null-terminate the temporary buffer
-		temp_buffer[bytes_read] = '\0';  
-		printf("read_to_buffer: read %zd bytes='%s'\n", bytes_read, temp_buffer);
-
-		// Concatenate the temporary buffer to the existing buffer
+		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
+		temp_buffer[bytes_read] = '\0';
 		buffer = str_join(buffer, temp_buffer);
 		if (!buffer)
-			return NULL;// Free buffer if memory allocation fails
-		
-		// Debug: Show the updated buffer
-		printf("read_to_buffer: buffer='%s'\n", buffer);
+			break ;
 	}
-	return buffer;  // Return the updated buffer
-}
-char *get_next_line(int fd)
-{
-	static char *buffer = NULL;  // Static buffer to hold the file data between calls
-	char *line;
-
-	// Check for invalid file descriptor or invalid buffer size
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return NULL;
-
-	// Read data from file to buffer
-	buffer = read_to_buffer(fd, buffer);
-	if (!buffer)
-		return NULL;  // If reading fails, return NULL
-
-	if (*buffer)  // If buffer has data
-		line = extract_line(&buffer);  // Extract the next line
-	else
+	free(temp_buffer);
+	if (bytes_read < 0 || !buffer)
 	{
-		free(buffer);  // Free buffer if empty
-		buffer = NULL;
-		return NULL;  // Return NULL if no data left
+		free(buffer);
+		return (NULL);
 	}
-
-	return line;  // Return the extracted line
+	return (buffer);
 }
+// char *get_next_line(int fd)
+// {
+// 	static char *buffer = NULL;  // Static buffer to hold the file data between calls
+// 	char *line;
 
-int main()
-{
-	int fd = open("text.txt", O_RDONLY);  // Open the file
-	char *line;
+// 	// Check for invalid file descriptor or invalid buffer size
+// 	if (fd < 0 || BUFFER_SIZE <= 0)
+// 		return NULL;
 
-	if (fd < 0)  // If the file cannot be opened, print error and exit
-	{
-		perror("Error opening file");
-		return 1;
-	}
+// 	// Read data from file to buffer
+// 	buffer = read_to_buffer(fd, buffer);
+// 	if (!buffer)
+// 		return NULL;  // If reading fails, return NULL
 
-	// Loop through each line in the file
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("Read line: '%s'\n", line);  // Print the extracted line
-		free(line);  // Free the memory used by the line
-	}
+// 	if (*buffer)  // If buffer has data
+// 		line = extract_line(&buffer);  // Extract the next line
+// 	else
+// 	{
+// 		free(buffer);  // Free buffer if empty
+// 		buffer = NULL;
+// 		return NULL;  // Return NULL if no data left
+// 	}
 
-	close(fd);  // Close the file
-	return 0;
-}
+// 	return line;  // Return the extracted line
+// }
+
+// int main()
+// {
+// 	int fd = open("text.txt", O_RDONLY);  // Open the file
+// 	char *line;
+
+// 	if (fd < 0)  // If the file cannot be opened, print error and exit
+// 	{
+// 		perror("Error opening file");
+// 		return 1;
+// 	}
+
+// 	// Loop through each line in the file
+// 	while ((line = get_next_line(fd)) != NULL)
+// 	{
+// 		printf("Read line: '%s'\n", line);  // Print the extracted line
+// 		free(line);  // Free the memory used by the line
+// 	}
+
+// 	close(fd);  // Close the file
+// 	return 0;
+// }

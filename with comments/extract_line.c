@@ -65,10 +65,12 @@ char	*extract_line(char **buffer)
 	char	*line;
 	char	*remaining;
 
+	printf("buffer %p\n", buffer);
+	printf("buffer ** %s\n", *buffer); //("Hello\nworld\nThis is a test.")
 	if (!buffer || !*buffer)
 		return (NULL);
 	newline_pos = find_newline(*buffer); // Locate the newline character
-	if (newline_pos)
+	if (newline_pos) // if newline symbol is found
 	{
 		// Allocate memory for the line, including '\n' and '\0'
 		line = malloc(newline_pos - *buffer + 2);
@@ -80,6 +82,7 @@ char	*extract_line(char **buffer)
 
 		// Create a new buffer for the remaining part
 		remaining = str_join(NULL, newline_pos + 1); // Copy everything after '\n'
+		printf("Remaining buffer after newline: %s\n", remaining);
 		free(*buffer); // Free the old buffer
 		*buffer = remaining; // Update the buffer pointer
 	}

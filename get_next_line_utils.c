@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:25:16 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/14 14:55:53 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:20:27 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,36 +65,36 @@ char *read_to_buffer(int fd, char *buffer)
 }
 
 // Function to extract the next line from the buffer
-char *get_next_line(int fd)
-{
-	static char *buffer = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0) return NULL;
-	buffer = read_to_buffer(fd, buffer);
-	if (!buffer || !*buffer) return NULL;
-	char *newline_pos = find_newline(buffer);
-	size_t line_len = newline_pos ? newline_pos - buffer + 1 : strlen(buffer);
-	char *line = malloc(line_len + 1);
-	if (!line) return NULL;
-	ft_memcpy(line, buffer, line_len);
-	line[line_len] = '\0';
-	if (newline_pos) buffer = str_join(NULL, newline_pos + 1);
-	else { free(buffer); buffer = NULL; }
-	return line;
-}
+// char *get_next_line(int fd)
+// {
+// 	static char *buffer = NULL;
+// 	if (fd < 0 || BUFFER_SIZE <= 0) return NULL;
+// 	buffer = read_to_buffer(fd, buffer);
+// 	if (!buffer || !*buffer) return NULL;
+// 	char *newline_pos = find_newline(buffer);
+// 	size_t line_len = newline_pos ? newline_pos - buffer + 1 : strlen(buffer);
+// 	char *line = malloc(line_len + 1);
+// 	if (!line) return NULL;
+// 	ft_memcpy(line, buffer, line_len);
+// 	line[line_len] = '\0';
+// 	if (newline_pos) buffer = str_join(NULL, newline_pos + 1);
+// 	else { free(buffer); buffer = NULL; }
+// 	return line;
+// }
 
-int main()
-{
-	int fd = open("text.txt", O_RDONLY);
-	if (fd < 0) { perror("Error opening file"); return 1; }
-	char *line;
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("%s", line);
-		free(line);
-	}
-	close(fd);
-	return 0;
-}
+// int main()
+// {
+// 	int fd = open("text.txt", O_RDONLY);
+// 	if (fd < 0) { perror("Error opening file"); return 1; }
+// 	char *line;
+// 	while ((line = get_next_line(fd)) != NULL)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 	}
+// 	close(fd);
+// 	return 0;
+// }
 
 
 
