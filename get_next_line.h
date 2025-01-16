@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:39:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/14 13:23:34 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:36:36 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,11 @@
 #  define BUFFER_SIZE 42
 # endif 
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
-#include <fcntl.h>
-
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
 
 char	*str_join(char *s1, const char *s2);
-//char *ft_strndup(const char *s, size_t n);
 char	*read_to_buffer(int fd, char *buffer);
 char	*extract_line(char **buffer);
 char	*find_newline(const char *str);

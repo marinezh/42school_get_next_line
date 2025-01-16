@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:25:16 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/16 15:37:06 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:38:38 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
@@ -97,28 +97,23 @@ char	*extract_line(char **buffer)
 
 char	*read_to_buffer(int fd, char *buffer)
 {
-	char	*temp_buffer;
+	char	temp_buffer[BUFFER_SIZE + 1];
 	ssize_t	bytes_read;
 
-	temp_buffer = malloc(BUFFER_SIZE + 1);
-	if (!temp_buffer)
-		return (free(buffer), NULL);
-	bytes_read = 1;
-	while (!find_newline(buffer) && bytes_read > 0)
+	while (!find_newline(buffer))
 	{
 		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);
-		if (bytes_read <= 0)
+		if (bytes_read < 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		if (bytes_read == 0)
 			break ;
 		temp_buffer[bytes_read] = '\0';
 		buffer = str_join(buffer, temp_buffer);
 		if (!buffer)
-			break ;
-	}
-	free(temp_buffer);
-	if (bytes_read < 0 || !buffer)
-	{
-		free(buffer);
-		return (NULL);
+			return (NULL);
 	}
 	return (buffer);
 }

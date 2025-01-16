@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 13:59:30 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/14 15:06:30 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/01/16 10:43:21 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char *get_next_line(int fd)
 {
-    static char *buffer = NULL;
+    static char *buffer = NULL; //static var which store the buffer between calls
     char *line;
 
     if (fd < 0 || BUFFER_SIZE <= 0)

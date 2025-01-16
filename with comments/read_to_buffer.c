@@ -22,7 +22,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		d[i] = s[i];
 		// Debug: Show each byte being copiedprintf("ft_memcpy: 
 		//copying byte %zu: %c\n", i, s[i]); // Debug: Show each byte being copied
-		printf("ft_memcpy: copying byte %zu: %c\n", i, s[i]); 
+		//printf("ft_memcpy: copying byte %zu: %c\n", i, s[i]); 
 		i++;
 	}
 	return (dest);
@@ -36,7 +36,7 @@ char	*find_newline(const char *str)
 		if (*str == '\n')
 		{
 			// Debug: Show where the newline is found
-			printf("find_newline: found newline at position %ld\n", str - str);
+			// printf("find_newline: found newline at position %ld\n", str - str);
 			return ((char *)str); // return pointer to the newline
 		}
 			
@@ -77,21 +77,24 @@ char	*str_join(char *s1, const char *s2)
 char	*read_to_buffer(int fd, char *buffer)
 {
 	char	*temp_buffer;
-	ssize_t	bytes_read;
+	int	bytes_read;
 
 	temp_buffer = malloc(BUFFER_SIZE + 1);
 	if (!temp_buffer)
 		return (free(buffer), NULL);
 	bytes_read = 1;
-	while (!find_newline(buffer) && bytes_read > 0)
+	printf("start reading data from the file\n"); 
+	while (!find_newline(buffer) && bytes_read > 0) // read untill new line is found
 	{
 		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);
-		if (bytes_read <= 0)
+		if (bytes_read <= 0) // if reading ends or error accure leave the cycle
 			break ;
 		temp_buffer[bytes_read] = '\0';
+		printf("read %d bite: '%s'\n", bytes_read, temp_buffer);
 		buffer = str_join(buffer, temp_buffer);
 		if (!buffer)
 			break ;
+		printf("new buffer: '%s'\n", buffer);
 	}
 	free(temp_buffer);
 	if (bytes_read < 0 || !buffer)
@@ -105,32 +108,31 @@ char	*read_to_buffer(int fd, char *buffer)
 
 int main(void)
 {
-    // Открываем файл для чтения
+  
     int fd = open("text.txt", O_RDONLY);
     if (fd < 0)
     {
-        perror("Ошибка при открытии файла");
+        perror("error");
         return (1);
     }
 
-    // Создаём пустой буфер
+
     char *buffer = NULL;
 
-    // Читаем содержимое файла в буфер
     buffer = read_to_buffer(fd, buffer);
 
-    // Проверяем результат чтения
+   
     if (!buffer)
     {
-        printf("Ошибка: буфер пустой или произошла ошибка при чтении\n");
+        printf("error while reading file\n");
     }
     else
     {
-        printf("Результат чтения из файла:\n%s\n", buffer);
-        free(buffer); // Освобождаем память после использования
+        printf("result of file reading:\n%s\n", buffer);
+        free(buffer); 
     }
 
-    // Закрываем файл
+
     close(fd);
     return (0);
 }

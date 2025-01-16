@@ -1,41 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 01:16:52 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/01/16 15:34:38 by mzhivoto         ###   ########.fr       */
+/*   Created: 2025/01/12 13:59:30 by mzhivoto          #+#    #+#             */
+/*   Updated: 2025/01/15 13:37:10 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-int main()
+char	*get_next_line(int fd)
 {
-	int fd = open("text.txt", O_RDONLY);
-	//int fd = 0;
-	char *line;
+	static char	*buffer[1024];
+	char		*line;
 
-
-	while (1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buffer[fd] = read_to_buffer(fd, buffer[fd]);
+	if (!buffer[fd])
+		return (NULL);
+	if (*buffer[fd])
+		line = extract_line(&buffer[fd]);
+	else
 	{
-		line = get_next_line(fd);
-		
-		printf("%s", line);
-		if (line == NULL)
-			break;
-		
-		free(line);
+		free(buffer[fd]);
+		buffer[fd] = NULL;
+		return (NULL);
 	}
-		close(fd);
-	return 0;
+	return (line);
 }
+// printf("line for fd %d is: %s", fd, line);
+	// printf("fd is %d:", fd);
+// #include <stdio.h>
 // int main()
 // {
 // 	int fd = open("text.txt", O_RDONLY);
@@ -44,17 +43,19 @@ int main()
 // 	char *line;
 // 	char *line1;
 
-// 	while (1)
+// 	while (line || line1)
 // 	{
 // 		line = get_next_line(fd);
 // 		line1 = get_next_line(fd1);
-// 		printf("%s", line);
-// 		printf("%s", line1);
 // 		if (line1 == NULL || line == NULL)
 // 			break;
+// 		printf("%s", line);
+// 		printf("%s", line1);
 // 		free(line);
 // 		free(line1);
 // 	}
+// 	free(line);
+// 	free(line1);
 // 	close(fd);
 // 	close(fd1);
 // 	return 0;
